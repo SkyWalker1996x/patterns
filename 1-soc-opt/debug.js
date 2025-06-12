@@ -74,7 +74,7 @@ const expectedResult = `
   London             8673713    1572    5431    United Kingdom    40
   Shanghai          24256800    6340    3826             China    28
   Istanbul          14160467    5461    2593            Turkey    19
-`
+`;
 
 // 1. transformStringDataToArray
 // 2. removeLastElement
