@@ -26,29 +26,33 @@ const data = `city,population,area,density,country
   Bangkok,8280925,1569,5279,Thailand`;
 
 if (data) {
-    const lines = data.split('\n'); // formateStringDataToArray
-    // console.log('lines 1', lines); //
+    const lines = data.split('\n'); // transform string to array
+    // console.log('lines 1', lines);
     lines.pop(); // ??? removeLastElement
     // console.log('lines 2', lines);
     const table = [];
     let first = true;
-    let max = 0;
+    let max = 0; // ?
     for (const line of lines) {
-        console.log('line', line);
+        // console.log('line', line);
         if (first) {
             first = false; // removeHeaders
         } else {
             const cells = line.split(',');
-            const d = parseInt(cells[3]);
-            if (d > max) max = d;
+            const d = parseInt(cells[3]);  // density
+            if (d > max) max = d; // find max density
             table.push([cells[0], cells[1], cells[2], cells[3], cells[4]]);
         }
     }
+    console.log('max', max);
+    console.log('table', table);
     for (const row of table) {
-        const a = Math.round((row[3] * 100) / max);
+        const a = Math.round((row[3] * 100) / max); // calculate new density index, comparing with max density
         row.push(a.toString());
     }
-    table.sort((r1, r2) => r2[5] - r1[5]);
+    console.log('table 2', table);
+    table.sort((r1, r2) => r2[5] - r1[5]); // sort by density comparasion
+    // just align columns
     for (const row of table) {
         let s = row[0].padEnd(18);
         s += row[1].padStart(10);
@@ -71,3 +75,11 @@ const expectedResult = `
   Shanghai          24256800    6340    3826             China    28
   Istanbul          14160467    5461    2593            Turkey    19
 `
+
+// 1. transformStringDataToArray
+// 2. removeLastElement
+// 3. removeHeaders
+// 4. findMaxDensity
+// 5. injectDensityIndex
+// 6. sortByDensityIndex
+// 7. alignStringData
