@@ -12,15 +12,46 @@ const data = `city,population,area,density,country
   New York City,8537673,784,10892,United States
   Bangkok,8280925,1569,5279,Thailand`;
 
-const transformStringDataToArray = (data) => data.split('\n');
+const metaData = {
+  cityName: {
+    index: 0,
+    padEnd: 18,
+  },
+  population: {
+    index: 1,
+    padStart: 10,
+  },
+  area: {
+    index: 2,
+    padStart: 8,
+  },
+  density: {
+    index: 3,
+    padStart: 8,
+  },
+  country: {
+    index: 4,
+    padStart: 18,
+  },
+  densityIndex: {
+    index: 5,
+    padStart: 6,
+  },
+};
+
+const { cityName, population, area, density, country, densityIndex } = metaData;
+
+const getArrayFromString = (string, separator) => string.split(separator);
+
+const transformStringDataToArray = (data) => getArrayFromString(data, '\n');
 
 const removeFirstAndLastRows = (data) => data.slice(1, -1);
 
 const findMaxDensity = (data) => {
   let maxDensity = 0;
   for (const row of data) {
-    const rowAsArray = row.split(',');
-    const rowDensity = Number(rowAsArray[3]);
+    const rowAsArray = getArrayFromString(row, ',');
+    const rowDensity = Number(rowAsArray[density.index]);
 
     if (rowDensity > maxDensity) {
       maxDensity = rowDensity;
@@ -32,8 +63,8 @@ const findMaxDensity = (data) => {
 // eslint-disable-next-line arrow-body-style
 const injectDensityIndex = (data, maxDensity) => {
   return data.map((row) => {
-    const rowAsArray = row.split(',');
-    const rowDensity = Number(rowAsArray[3]);
+    const rowAsArray = getArrayFromString(row, ',');
+    const rowDensity = Number(rowAsArray[density.index]);
     const densityIndex = Math.round((rowDensity * 100) / maxDensity);
 
     return row + `,${densityIndex}`;
@@ -43,8 +74,8 @@ const injectDensityIndex = (data, maxDensity) => {
 // eslint-disable-next-line arrow-body-style
 const sortByDensityIndex = (data) => {
   return data.slice().sort((cityA, cityB) => {
-    const densityCityA = Number(cityA.split(',')[3]);
-    const densityCityB = Number(cityB.split(',')[3]);
+    const densityCityA = Number(cityA.split(',')[density.index]);
+    const densityCityB = Number(cityB.split(',')[density.index]);
 
     return densityCityB - densityCityA;
   });
@@ -52,13 +83,13 @@ const sortByDensityIndex = (data) => {
 
 const printAlignedStringData = (data) => {
   for (const row of data) {
-    const rowAsArray = row.split(',');
-    let s = rowAsArray[0].padEnd(18);
-    s += rowAsArray[1].padStart(10);
-    s += rowAsArray[2].padStart(8);
-    s += rowAsArray[3].padStart(8);
-    s += rowAsArray[4].padStart(18);
-    s += rowAsArray[5].padStart(6);
+    const rowAsArray = getArrayFromString(row, ',');
+    let s = rowAsArray[cityName.index].padEnd(cityName.padEnd);
+    s += rowAsArray[population.index].padStart(population.padStart);
+    s += rowAsArray[area.index].padStart(area.padStart);
+    s += rowAsArray[density.index].padStart(density.padStart);
+    s += rowAsArray[country.index].padStart(country.padStart);
+    s += rowAsArray[densityIndex.index].padStart(densityIndex.padStart);
     console.log(s);
   }
 };
