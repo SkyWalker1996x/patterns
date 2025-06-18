@@ -44,13 +44,10 @@ if (data) {
             table.push([cells[0], cells[1], cells[2], cells[3], cells[4]]);
         }
     }
-    console.log('max', max);
-    console.log('table', table);
     for (const row of table) {
         const a = Math.round((row[3] * 100) / max); // calculate new density index, comparing with max density
         row.push(a.toString());
     }
-    console.log('table 2', table);
     table.sort((r1, r2) => r2[5] - r1[5]); // sort by density comparasion
     // just align columns
     for (const row of table) {

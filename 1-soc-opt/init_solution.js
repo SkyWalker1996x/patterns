@@ -12,20 +12,63 @@ const data = `city,population,area,density,country
   New York City,8537673,784,10892,United States
   Bangkok,8280925,1569,5279,Thailand`;
 
-const transformStringDataToArray = (data) => data;
-const removeLastElement = (data) => data;
-const removeHeaders = (data) => data;
-const findMaxDensity = (data) => data;
-const injectDensityIndex = (data) => data;
-const sortByDensityIndex = (data, maxDensity) => data;
-const alignStringData = (data) => data;
+const transformStringDataToArray = (data) => data.split('\n');
+
+const removeFirstAndLastRows = (data) => data.slice(1, -1);
+
+const findMaxDensity = (data) => {
+  let maxDensity = 0;
+  for (const row of data) {
+    const rowAsArray = row.split(',');
+    const rowDensity = Number(rowAsArray[3]);
+
+    if (rowDensity > maxDensity) {
+      maxDensity = rowDensity;
+    }
+  }
+  return maxDensity;
+};
+
+// eslint-disable-next-line arrow-body-style
+const injectDensityIndex = (data, maxDensity) => {
+  return data.map((row) => {
+    const rowAsArray = row.split(',');
+    const rowDensity = Number(rowAsArray[3]);
+    const densityIndex = Math.round((rowDensity * 100) / maxDensity);
+
+    return row + `,${densityIndex}`;
+  });
+};
+
+// eslint-disable-next-line arrow-body-style
+const sortByDensityIndex = (data) => {
+  return data.slice().sort((cityA, cityB) => {
+    const densityCityA = Number(cityA.split(',')[3]);
+    const densityCityB = Number(cityB.split(',')[3]);
+
+    return densityCityB - densityCityA;
+  });
+};
+
+const printAlignedStringData = (data) => {
+  for (const row of data) {
+    const rowAsArray = row.split(',');
+    let s = rowAsArray[0].padEnd(18);
+    s += rowAsArray[1].padStart(10);
+    s += rowAsArray[2].padStart(8);
+    s += rowAsArray[3].padStart(8);
+    s += rowAsArray[4].padStart(18);
+    s += rowAsArray[5].padStart(6);
+    console.log(s);
+  }
+};
 
 const transformedData = transformStringDataToArray(data);
-const dataWithoutLastElement = removeLastElement(transformedData);
-const dataWithoutHeaders = removeHeaders(dataWithoutLastElement);
-const maxDensity = findMaxDensity(dataWithoutHeaders);
-const dataWithDensityIndex = injectDensityIndex(dataWithoutHeaders, maxDensity);
+const dataWithoutFirstAndLastRows = removeFirstAndLastRows(transformedData);
+const maxDensity = findMaxDensity(dataWithoutFirstAndLastRows);
+const dataWithDensityIndex = injectDensityIndex(
+  dataWithoutFirstAndLastRows,
+  maxDensity,
+);
 const sortedDataWithDensityIndex = sortByDensityIndex(dataWithDensityIndex);
-const alignedData = alignStringData(sortedDataWithDensityIndex);
-
-console.log(alignedData);
+printAlignedStringData(sortedDataWithDensityIndex);
